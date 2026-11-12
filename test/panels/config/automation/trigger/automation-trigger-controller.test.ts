@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type {
   AutomationConfig,
   BlueprintAutomationConfig,
+  SidebarConfig,
   Trigger,
   TriggerCondition,
 } from "../../../../../src/data/automation";
@@ -159,6 +160,23 @@ describe("AutomationTriggerController with a blueprint automation", () => {
 
     expect(ids()).toEqual(["motion_detected"]);
     expect(context().optionsStatus).toBe("loaded");
+  });
+
+  it("numbers no triggers once a blueprint replaces an automation with an open sidebar", () => {
+    update({
+      triggers: [trigger("own")],
+      conditions: [condition],
+      actions: [],
+    });
+    controller.checkShowIndices({
+      config: condition,
+    } as unknown as SidebarConfig);
+    expect(context().showIndices).toBe(true);
+
+    // Switching to YAML removes the sidebar without reporting it.
+    update(blueprint("motion.yaml"));
+
+    expect(context().showIndices).toBe(false);
   });
 
   it("fetches again only when `use_blueprint` changes by value", async () => {

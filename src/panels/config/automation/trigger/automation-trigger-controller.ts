@@ -117,21 +117,27 @@ export class AutomationTriggerController implements ReactiveController {
     }
     let options: TriggerIdOption[];
     let optionsStatus: TriggerOptionsStatus = "loaded";
+    let showIndices = this._provider.value.showIndices;
     if ("use_blueprint" in config && config.use_blueprint) {
       this._requestBlueprintTriggers(config.use_blueprint);
       options = this._getBlueprintTriggerIdOptions(this._blueprintTriggers);
       optionsStatus = this._blueprintStatus;
+      // There are no trigger rows to number. A sidebar left open before switching
+      // to a blueprint in YAML closes without telling the controller.
+      showIndices = false;
     } else {
       options = this._getTriggerIdOptions(config.triggers);
     }
     if (
       options !== this._provider.value.options ||
-      optionsStatus !== this._provider.value.optionsStatus
+      optionsStatus !== this._provider.value.optionsStatus ||
+      showIndices !== this._provider.value.showIndices
     ) {
       this._provider.setValue({
         ...this._provider.value,
         options,
         optionsStatus,
+        showIndices,
       });
     }
   }
