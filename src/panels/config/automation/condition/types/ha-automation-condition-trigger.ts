@@ -6,8 +6,10 @@ import { consume } from "../../../../../common/decorators/consume";
 import { ensureArray } from "../../../../../common/array/ensure-array";
 import { fireEvent } from "../../../../../common/dom/fire_event";
 import { capitalizeFirstLetter } from "../../../../../common/string/capitalize-first-letter";
+import "../../../../../components/animation/ha-fade-in";
 import "../../../../../components/ha-alert";
 import "../../../../../components/ha-button";
+import "../../../../../components/ha-spinner";
 import "../../../../../components/ha-svg-icon";
 import "../../../../../components/ha-trigger-icon";
 import "../../../../../components/item/ha-list-item-option";
@@ -60,7 +62,9 @@ export class HaTriggerCondition extends LitElement {
     if (!triggerIdOptions.length && !selectedIds.length) {
       switch (status) {
         case "loading":
-          return this.hass.localize("ui.common.loading");
+          return html`<ha-fade-in .delay=${500}>
+            <ha-spinner size="small"></ha-spinner>
+          </ha-fade-in>`;
         case "failed":
           return this.hass.localize(
             "ui.panel.config.automation.editor.conditions.type.trigger.blueprint_triggers_pending"
