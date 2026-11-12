@@ -122,8 +122,6 @@ export class AutomationTriggerController implements ReactiveController {
       this._requestBlueprintTriggers(config.use_blueprint);
       options = this._getBlueprintTriggerIdOptions(this._blueprintTriggers);
       optionsStatus = this._blueprintStatus;
-      // There are no trigger rows to number. A sidebar left open before switching
-      // to a blueprint in YAML closes without telling the controller.
       showIndices = false;
     } else {
       options = this._getTriggerIdOptions(config.triggers);
@@ -194,14 +192,12 @@ export class AutomationTriggerController implements ReactiveController {
   private _requestBlueprintTriggers(
     useBlueprint: BlueprintAutomationConfig["use_blueprint"]
   ) {
-    // YAML mode parses a new object on every edit, so compare by value.
     if (deepEqual(useBlueprint, this._blueprintRequested)) {
       return;
     }
     if (useBlueprint.path !== this._blueprintRequested?.path) {
       this._blueprintTriggers = undefined;
     }
-    // Keep the last triggers listed; new inputs may change their IDs.
     this._blueprintStatus = "loading";
     this._blueprintRequested = useBlueprint;
     this._fetchBlueprintTriggers(useBlueprint);
@@ -213,8 +209,6 @@ export class AutomationTriggerController implements ReactiveController {
       try {
         triggers = await this._options.fetchBlueprintTriggers(useBlueprint);
       } catch (_err) {
-        // Inputs fail to substitute while they are incomplete. The last
-        // triggers stay listed; the status only hides missing-ID warnings.
         if (useBlueprint === this._blueprintRequested) {
           this._blueprintStatus = "failed";
           this._host.requestUpdate();

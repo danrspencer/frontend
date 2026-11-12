@@ -55,7 +55,6 @@ export class HaTriggerCondition extends LitElement {
     const selectedIds = (ensureArray(this.condition.id) ?? []).filter(Boolean);
     const triggerIdOptions = this._triggers?.options ?? [];
     const missingIds = this._missingIds(this.condition.id, triggerIdOptions);
-    // Until a blueprint's triggers are known, an ID not listed may still exist.
     const status = this._triggers?.optionsStatus ?? "loaded";
     const resolved = status === "loaded";
 
