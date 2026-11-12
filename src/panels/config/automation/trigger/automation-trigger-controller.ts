@@ -76,7 +76,7 @@ export class AutomationTriggerController implements ReactiveController {
 
   private _blueprintTriggers?: Trigger | Trigger[];
 
-  /** "failed" while required inputs are empty; a refetch after a success stays "loaded". */
+  /** "failed" while required inputs are empty. */
   private _blueprintStatus: TriggerOptionsStatus = "loading";
 
   constructor(
@@ -194,8 +194,9 @@ export class AutomationTriggerController implements ReactiveController {
     }
     if (useBlueprint.path !== this._blueprintRequested?.path) {
       this._blueprintTriggers = undefined;
-      this._blueprintStatus = "loading";
     }
+    // Keep the last triggers listed; new inputs may change their IDs.
+    this._blueprintStatus = "loading";
     this._blueprintRequested = useBlueprint;
     this._fetchBlueprintTriggers(useBlueprint);
   }
